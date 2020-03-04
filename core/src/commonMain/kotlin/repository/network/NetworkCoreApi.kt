@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 import repository.model.Error
 import repository.model.Version
 
-class KarhooCoreApi(
+class CoreApi(
     val engine: HttpClientEngine? = null,
     val coroutineScope: CoroutineScope = GlobalScope
 ) : NetworkAPI {

@@ -1,5 +1,4 @@
-import repository.model.Version
-import repository.network.KarhooCoreApi
+import repository.network.CoreApi
 
 actual var hello = "HELLO WORLD"
 
@@ -28,7 +27,7 @@ fun <E> List<E>.toArrayList(): Array<E> {
 @JsExport
 @kotlin.js.ExperimentalJsExport
 fun getVersion() {
-    KarhooCoreApi().getVersion({
+    CoreApi().getVersion({
         console.log(it)
     }, {
         console.log(it)
