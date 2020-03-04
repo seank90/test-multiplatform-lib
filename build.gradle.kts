@@ -1,7 +1,8 @@
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig.*
 
 plugins {
-    kotlin("multiplatform") version "1.3.70"
+    kotlin("multiplatform") version Versions.kotlin
+    kotlin("plugin.serialization") version Versions.kotlin
 }
 
 group = "org.example"
@@ -9,9 +10,8 @@ version = "1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
+    maven(url = "https://dl.bintray.com/kotlin/kotlin-eap")
 }
-
-dependencies {}
 
 kotlin {
     /* Targets configuration omitted. 
@@ -20,17 +20,24 @@ kotlin {
 
     js() {
         browser {
-            dceTask { keep("kotlin.defineModule") }
-            webpackTask {
-                mode = Mode.DEVELOPMENT
+            dceTask {
+                keep("ktor-ktor-io.\$\$importsForInline\$\$.ktor-ktor-io.io.ktor.utils.io")
+                keep("multiplatform-lib")
+                keep("bufferutil")
             }
         }
     }
 
     sourceSets {
+
         val commonMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-common"))
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-common:${Versions.coroutinesCore}")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime-common:${Versions.serializationCommon}")
+                implementation("io.ktor:ktor-client-core:${Versions.ktor}")
+                implementation("io.ktor:ktor-client-json:${Versions.ktor}")
+                implementation("io.ktor:ktor-client-serialization:${Versions.ktor}")
             }
         }
         val commonTest by getting {
@@ -42,10 +49,20 @@ kotlin {
         val jsMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-js"))
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-js:${Versions.coroutinesCore}")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime-js:${Versions.serializationCommon}")
+                implementation("io.ktor:ktor-client-js:${Versions.ktor}")
+                implementation("io.ktor:ktor-client-json-js:${Versions.ktor}")
+                implementation("io.ktor:ktor-client-serialization-js:${Versions.ktor}")
+                api(npm("text-encoding"))
             }
         }
         val jsTest by getting {
 
         }
     }
+}
+
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().all {
+    kotlinOptions.freeCompilerArgs += "-Xopt-in=kotlin.RequiresOptIn"
 }

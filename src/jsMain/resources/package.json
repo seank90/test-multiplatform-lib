@@ -1,6 +1,6 @@
 {
   "name": "test-multiplatform-lib",
-  "version": "1.0.2",
+  "version": "1.0.14",
   "description": "",
   "main": "index.js",
   "scripts": {
