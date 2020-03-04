@@ -23,7 +23,10 @@ kotlin {
             dceTask {
                 keep("ktor-ktor-io.\$\$importsForInline\$\$.ktor-ktor-io.io.ktor.utils.io")
                 keep("multiplatform-lib")
-                keep("bufferutil")
+            }
+            webpackTask {
+                mode = Mode.PRODUCTION
+                sourceMaps = false
             }
         }
     }
@@ -55,6 +58,10 @@ kotlin {
                 implementation("io.ktor:ktor-client-json-js:${Versions.ktor}")
                 implementation("io.ktor:ktor-client-serialization-js:${Versions.ktor}")
                 api(npm("text-encoding"))
+                api(npm("bufferutil"))
+                api(npm("utf-8-validate"))
+                api(npm("abort-controller"))
+                api(npm("fs"))
             }
         }
         val jsTest by getting {
